@@ -19,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     String StoragePermission[];
 
     Uri image_uri;
+
+    private String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
         Intent cameraIntent = new Intent (MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,image_uri);
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
-
     }
 
     private void requestStoragePermission() {
@@ -184,8 +186,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == IMAGE_PICK_GALLERY_CODE) {
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (requestCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
                 mPreviewIv.setImageURI(resultUri);
 
@@ -229,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
-
             }
         }
     }
